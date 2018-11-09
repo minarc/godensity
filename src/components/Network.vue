@@ -1,47 +1,36 @@
 <template>
-  <v-container fluid grid-list-lg class="orange lighten-5">
-    <v-layout row wrap>
-          <d3-network ref='net' :net-nodes="nodes" :net-links="links" />
-    </v-layout>
+  <v-container fluid grid-list-lg>
+    <d3-network ref='net' :net-nodes=nodes :net-links=links :options=options />
   </v-container>
 </template>
 <script>
 import D3Network from 'vue-d3-network'
 
 export default {
+  components: {
+    D3Network
+  },
   data () {
     return {
-      components: {
-        D3Network
-      },
-      network: '',
       nodes: [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-        { id: 4 },
-        { id: 5 },
-        { id: 6 },
-        { id: 7 },
-        { id: 8 },
-        { id: 9 }
+        { id: 1, name: 'my awesome node 1' },
+        { id: 2, name: 'my node 2' },
+        { id: 3, name: 'orange node' }
       ],
       links: [
-        { sid: 1, tid: 2 },
-        { sid: 2, tid: 8 },
-        { sid: 3, tid: 4 },
-        { sid: 4, tid: 5 },
-        { sid: 5, tid: 6 },
-        { sid: 7, tid: 8 },
-        { sid: 5, tid: 8 },
-        { sid: 3, tid: 8 },
-        { sid: 7, tid: 9 }
+        { sid: 1, tid: 2, name: '2.57' },
+        { sid: 2, tid: 2 },
+        { sid: 3, tid: 2 }
       ],
-      nodeSize: 20
+      options: {
+        nodeSize: 40,
+        canvas: false,
+        force: 2500,
+        linkLabels: true,
+        nodeLabels: true,
+        fontSize: 15
+      }
     }
-  },
-  created () {
-    this.network = D3Network
   }
 }
 </script>
