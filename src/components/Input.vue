@@ -8,12 +8,14 @@
         <v-progress-linear :active=active color="orange" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <v-flex>
-        <d3-network :net-nodes=nodes :net-links=links :options=options />
-      </v-flex>
-      <v-flex v-show="alert">
-        <v-alert :value=alert color="error" icon="warning" transition="scale-transition"> {{ message }} </v-alert>
         <v-card>
-          <v-chip v-for="item in textrank" :key=item color="green" text-color="white">
+          <d3-network :net-nodes=nodes :net-links=links :options=options />
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-alert v-show="alert" :value=alert color="error" icon="warning" transition="scale-transition"> {{ message }} </v-alert>
+        <v-card>
+          <v-chip v-for="item in keywords" :key=item color="green" text-color="white">
             <v-avatar class="green darken-4">{{ item.value.toFixed(2) }}</v-avatar>{{ item.key }}
           </v-chip>
         </v-card>
@@ -38,6 +40,7 @@ export default {
   data () {
     return {
       text: '',
+      d3: false,
       active: false,
       input: false,
       alert: false,
@@ -73,6 +76,7 @@ export default {
       this.keywords = []
       this.nodes = []
       this.links = []
+      this.d3 = true
 
       axios.post('/api/v2/textrank', {
         text: this.text
@@ -84,7 +88,7 @@ export default {
         this.keywords = response.data['result']['keywords']
 
         this.keywords.forEach(e => {
-          this.nodes.push({name: e['key'], _color: 'orange'})
+          this.nodes.push({name: e['key'], _color: 'white'})
         })
 
         response.data['result']['adjacency_list'].forEach(e => {
