@@ -10,7 +10,7 @@
             <v-divider v-else-if="item.divider" :inset="item.inset" :key="index"></v-divider>
 
             <v-list-tile v-else :key="item.title" avatar>
-              <img v-if="item.image.length > 0" :src="item.image[0]" height="50" aspect-ratio=1.0 style="margin-right:10px">
+              <!-- <img v-if="item.image.length > 0" :src="item.image[0]" height="60" aspect-ratio=1.0 style="margin-right:10px"> -->
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
@@ -59,6 +59,6 @@ export default {
 
 <style>
 .v-list--two-line .v-list__tile {
-  height: 100px;
+  height: 120px;
 }
 </style>
