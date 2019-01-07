@@ -18,6 +18,7 @@
     "axios": "^0.18.0",
     "d3-force": "^1.1.2",
     "express": "^4.16.4",
+    "http-proxy-middleware": "^0.19.1",
     "material-design-icons-iconfont": "^3.0.3",
     "morgan": "^1.9.1",
     "vue": "^2.5.2",
