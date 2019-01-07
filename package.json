@@ -11,12 +11,15 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "d3-force": "^1.1.2",
+    "express": "^4.16.4",
     "material-design-icons-iconfont": "^3.0.3",
+    "morgan": "^1.9.1",
     "vue": "^2.5.2",
     "vue-d3-network": "^0.1.26",
     "vue-router": "^3.0.1",
