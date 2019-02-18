@@ -3,7 +3,7 @@
     <v-content>
       <v-container fluid fill-height grid-list class="white">
         <v-layout row wrap align-start justify-center>
-          <v-flex xs12 sm8 md8 lg4 class="elevation-5">
+          <v-flex xs12 sm10 md8 lg4 class="elevation-5">
             <v-tabs animated bounce infinite fixed-tabs color="orange darken-1" grow dark show-arrows>
               <v-tabs-slider color="white"></v-tabs-slider>
               <v-tab><v-icon>keyboard</v-icon></v-tab>
