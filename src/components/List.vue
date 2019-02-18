@@ -4,18 +4,18 @@
           <v-layout row wrap>
             <v-flex xs12 v-for="item in items" :key="item">
               <v-card class="elevation-4">
-                <v-layout>
-                  <v-flex xs7>
-                  <v-card-title>
-                      <h2 class="text-sm-left">{{ item.title }}</h2>
-                      <p class="text-sm-left"> {{ item.description.slice(0, 100) }} ... </p>
-                  </v-card-title>
-                </v-flex>
-                  <v-flex xs5>
-                    <v-img :src="item.image[0]" max-height="100%" position="top"></v-img>
+                <v-layout row wrap>
+                  <v-flex xs12 sm4 md4>
+                    <v-img :src="item.image[0]" max-height="180px" position="top"></v-img>
                   </v-flex>
-              </v-layout>
-              <v-divider></v-divider>
+                  <v-flex xs12 sm8 md8>
+                    <v-card-title>
+                        <h4 class="text-sm-left">{{ item.title }}</h4>
+                        <p class="text-sm-left"> {{ item.description.slice(0, 50) }} ... </p>
+                    </v-card-title>
+                  </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
                 <v-card-text>
                   <v-chip small disabled outline color="orange" text-color="orange" v-for="key in item.discoveryTags" :key="key"> #{{ key }} </v-chip>
                   <v-chip small disabled outline color="blue" text-color="blue" v-for="key in item.keyword" :key="key"> #{{ key }} </v-chip>
