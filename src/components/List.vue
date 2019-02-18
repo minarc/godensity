@@ -12,7 +12,7 @@
                   </v-card-title>
                 </v-flex>
                   <v-flex xs5>
-                    <v-img :src="item.image[0]" max-height="180px"></v-img>
+                    <v-img :src="item.image[0]" max-height="100%" position="top"></v-img>
                   </v-flex>
               </v-layout>
               <v-divider></v-divider>
