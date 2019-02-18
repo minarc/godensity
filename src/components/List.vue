@@ -1,6 +1,6 @@
 <template>
 <!-- <v-container> -->
-  <v-layout row>
+  <v-layout>
     <v-flex>
       <!-- <v-card> -->
         <v-list two-line>
@@ -58,7 +58,4 @@ export default {
 </script>
 
 <style>
-.v-list--two-line .v-list__tile {
-  height: 120px;
-}
 </style>
