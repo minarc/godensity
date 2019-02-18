@@ -8,8 +8,8 @@
               <v-tabs-slider color="white"></v-tabs-slider>
               <v-tab><v-icon>keyboard</v-icon></v-tab>
               <v-tab><v-icon>view_list</v-icon></v-tab>
-              <v-tabs-items v-model="currentItem">
-                <v-tab-item>
+              <v-tabs-items v-model="currentItem" vertical>
+                <v-tab-item transition>
                   <component :is="tab1"></component>
                 </v-tab-item>
                 <v-tab-item>
