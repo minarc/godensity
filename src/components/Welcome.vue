@@ -8,7 +8,7 @@
               <v-tabs-slider color="white"></v-tabs-slider>
               <v-tab><v-icon>keyboard</v-icon></v-tab>
               <v-tab><v-icon>view_list</v-icon></v-tab>
-              <v-tabs-items v-model="currentItem" vertical>
+              <v-tabs-items vertical>
                 <v-tab-item transition>
                   <component :is="tab1"></component>
                 </v-tab-item>
@@ -30,6 +30,8 @@ import list from './List.vue'
 
 export default {
   name: 'Tabs',
+  components: {
+  },
   data () {
     return {
       tab1: '',

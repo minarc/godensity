@@ -91,6 +91,7 @@ export default {
           this.nodes.push({name: e['key'], _color: 'white'})
         })
 
+        console.log(response.data)
         response.data['result']['adjacency_list'].forEach(e => {
           const sid = this.indexing(e['key'])
           e['value'].forEach(values => {
