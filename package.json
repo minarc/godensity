@@ -21,6 +21,8 @@
     "http-proxy-middleware": "^0.19.1",
     "material-design-icons-iconfont": "^3.0.3",
     "morgan": "^1.9.1",
+    "prettier": "^1.16.4",
+    "prettier-eslint": "^8.8.2",
     "vue": "^2.5.2",
     "vue-d3-network": "^0.1.26",
     "vue-router": "^3.0.1",
