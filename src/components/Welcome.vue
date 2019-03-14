@@ -6,14 +6,14 @@
           <v-flex xs12 sm10 md8 lg4 class="elevation-5">
             <v-tabs animated bounce infinite fixed-tabs color="orange darken-1" grow dark show-arrows>
               <v-tabs-slider color="white"></v-tabs-slider>
-              <v-tab><v-icon>keyboard</v-icon></v-tab>
               <v-tab><v-icon>view_list</v-icon></v-tab>
+              <v-tab><v-icon>keyboard</v-icon></v-tab>
               <v-tabs-items vertical>
                 <v-tab-item transition>
-                  <component :is="tab1"></component>
+                  <component :is="tab2"></component>
                 </v-tab-item>
                 <v-tab-item>
-                  <component :is="tab2"></component>
+                  <component :is="tab1"></component>
                 </v-tab-item>
               </v-tabs-items>
             </v-tabs>
