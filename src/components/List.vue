@@ -59,12 +59,9 @@ export default {
         element['discoveryTags'] = []
         let key = element['_id']['key']
         axios.get('/api/v1/news/contents?key=' + key).then(response => {
-          axios
-            .post('/api/v2/textrank', { text: response.data })
-            .then(response => {
-              element['discoveryTags'] =
-                response.data['result']['linked_nouns']
-            })
+          axios.post('/api/v2/textrank', { text: response.data }).then(response => {
+            element['discoveryTags'] = response.data['result']['linked_nouns']
+          })
         })
       })
     })

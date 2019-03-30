@@ -29,7 +29,6 @@ import input from './Input.vue'
 import list from './List.vue'
 
 export default {
-  name: 'Tabs',
   components: {
   },
   data () {

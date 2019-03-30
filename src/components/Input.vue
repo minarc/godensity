@@ -15,8 +15,8 @@
       <v-flex>
         <v-alert v-show="alert" :value=alert color="error" icon="warning" transition="scale-transition"> {{ message }} </v-alert>
         <v-card>
-          <v-chip v-for="item in keywords" :key=item color="green" text-color="white">
-            <v-avatar class="green darken-4">{{ item.value.toFixed(2) }}</v-avatar>{{ item.key }}
+          <v-chip v-for="item in Object.entries(keywords)" :key=item[0] color="green" text-color="white">
+            <v-avatar class="green darken-4">{{ item[1].toFixed(2) }}</v-avatar>{{ item[0] }}
           </v-chip>
         </v-card>
       </v-flex>
@@ -85,30 +85,31 @@ export default {
         this.input = false
         this.nouns = response.data['result']['linked_nouns']
         this.adjacency = response.data['result']['adjacency_list']
-        this.keywords = response.data['result']['keywords']
+        this.keywords = response.data['result']['keywordSet']
 
-        this.keywords.forEach(e => {
-          this.nodes.push({name: e['key'], _color: 'white'})
+        Object.keys(this.keywords).forEach(it => {
+          this.nodes.push({id: it, name: it, _color: 'white'})
         })
 
-        console.log(response.data)
-        response.data['result']['adjacency_list'].forEach(e => {
-          const sid = this.indexing(e['key'])
-          e['value'].forEach(values => {
-            this.links.push({sid: sid, tid: this.indexing(values['key']), name: values['value'].toFixed(2), _color: 'orange'})
+        // this.links.push({
+        //   sid: '후보', tid: '접촉', name: 0.1, _color: 'orange'
+        // })
+
+        this.adjacency.forEach(source => {
+          Object.entries(source).forEach(target => {
+            console.log(target[0]) // sid
+            Object.entries(target[1]).forEach(t => {
+              Object.entries(t[1]).forEach(it => {
+                this.links.push({ sid: target[0], tid: it[0], _color: 'orange', name: it[1].toFixed(2) })
+              })
+            })
           })
         })
+
       }).catch(error => {
         this.alert = true
-        this.message = error['response']['status'] + ' ' + error['response']['statusText']
+        this.message = error['response']
       })
-    },
-    indexing (word) {
-      for (let i = 0; i < this.keywords.length; i++) {
-        if (word === this.keywords[i]['key']) {
-          return i
-        }
-      }
     }
   }
 }
