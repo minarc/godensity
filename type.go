@@ -12,6 +12,7 @@ type Node struct {
 	density     float32
 	densitySum  float32
 	images      []string
+	videos      []string
 	T           float32
 	text        string
 	next        *Node
