@@ -117,10 +117,10 @@ func DiveIntoDOM(me *goquery.Selection, domain string) *Node {
 	// fmt.Println(len(me.Children().Text()))
 	re := regexp.MustCompile(`\s+`)
 
-	// var C float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Text()), " ")))
+	var C float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Text()), " ")))
 	var LT float32 = float32(me.Find("a").Length())
 
-	// var LC float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Find("a").Text()), " ")))
+	var LC float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Find("a").Text()), " ")))
 	// var nLC float32 = C - LC
 	// var nLC float32 = C - LC
 	if T-LT <= 0 {
@@ -129,17 +129,17 @@ func DiveIntoDOM(me *goquery.Selection, domain string) *Node {
 	}
 
 	// var I float32 = float32(me.Find("img").Length())
-	var V float32 = float32(me.Find("video").Length())
+	// var V float32 = float32(me.Find("video").Length())
 	var G float32 = 0
-	var GIFs []string
+	// var GIFs []string
 
-	me.Find("img").Each(func(i int, s *goquery.Selection) {
-		src, _ := s.Attr("src")
-		if strings.Contains(src, ".gif") && !strings.Contains(src, "icon") {
-			G++
-			GIFs = append(GIFs, src)
-		}
-	})
+	// me.Find("img").Each(func(i int, s *goquery.Selection) {
+	// 	src, _ := s.Attr("src")
+	// 	if strings.Contains(src, ".gif") && !strings.Contains(src, "icon") {
+	// 		G++
+	// 		GIFs = append(GIFs, src)
+	// 	}
+	// })
 
 	// if I == 0 {
 	// 	I = 1
@@ -147,23 +147,24 @@ func DiveIntoDOM(me *goquery.Selection, domain string) *Node {
 	if G == 0 {
 		G = 1
 	}
-	if V == 0 {
-		V = 1
-	}
+	// if V == 0 {
+	// 	V = 1
+	// }
 
 	// fmt.Println(class, (C-LC)/(T-LT), I, C, LC, T, LT, re.ReplaceAllString(strings.TrimSpace(me.Text()), " "))
 	// fmt.Println(class, (C-LC)/(T-LT), I, C, LC, T, LT)
 	// var density float32 = (C-LC)/(T-LT) + (GIFs * V)
-	var density float32 = (G * V)
-	densitySum *= G * V
+	// var density float32 = (G * V)
+	// densitySum *= G * V
 
+	var density float32 = (C - LC) / (T - LT)
 	// density := (C / T) * float32(math.Log10(float64((C/LC)*(T/LT)))/math.Log10(math.Log(float64(((C/nLC)*LC)+LC+math.E))))
 
 	itsme := &Node{
 		goqueryNode: me,
 		density:     density,
 		densitySum:  densitySum,
-		images:      GIFs,
+		// images:      GIFs,
 		videos: me.Find("video > source").Map(func(_ int, s *goquery.Selection) string {
 			src, _ := s.Attr("src")
 			return src
