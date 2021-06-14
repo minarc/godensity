@@ -1,8 +1,12 @@
+<img width="460" src="https://user-images.githubusercontent.com/11865340/121863566-f5298880-cd36-11eb-9681-6b1ee0edbfa5.png">
+<img width="460" src="https://user-images.githubusercontent.com/11865340/121863583-f8bd0f80-cd36-11eb-8d7b-97bb8f52d762.png">
+
 # ruler
 
 > A Vue.js project
 
 ## Build Setup
+
 
 ``` bash
 # install dependencies
