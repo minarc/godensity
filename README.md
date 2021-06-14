@@ -5,3 +5,10 @@ This repository is implematation of 📄 **[DOM based content extraction via tex
 
 
 ![image](https://user-images.githubusercontent.com/11865340/121805896-3d3da200-cc88-11eb-96c2-7468cc94ae78.png)
+
+
+``` shell
+go test
+```
+<img width="1124" alt="image" src="https://user-images.githubusercontent.com/11865340/121860599-f73e1800-cd33-11eb-9927-612df92590ef.png">
+
