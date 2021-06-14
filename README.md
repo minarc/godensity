@@ -1,4 +1,4 @@
-# text-density
+# godensity
 This repository is implematation of 📄 **[DOM based content extraction via text density](https://dl.acm.org/doi/10.1145/2009916.2009952)** and I just tested this code for Korean web pages.
 
 📄 **[DOM based content extraction via text density](https://dl.acm.org/doi/10.1145/2009916.2009952)** 논문의 내용을 Go로 구현 한 것입니다. 한국어 페이지들을 대상으로 테스트 해 봤습니다.
