@@ -38,6 +38,7 @@ export default {
       cards: ''
     }
   },
+
   created () {
     this.tab1 = input
     this.tab2 = list

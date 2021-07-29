@@ -105,7 +105,6 @@ export default {
             })
           })
         })
-
       }).catch(error => {
         this.alert = true
         this.message = error['response']
