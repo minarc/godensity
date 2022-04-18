@@ -14,8 +14,7 @@ import (
 func TestDensity(t *testing.T) {
 
 	urls := []string{
-		"https://news.joins.com/article/23707620?cloc=joongang-home-toptype1basic",
-		// "https://news.v.daum.net/v/20200216130927758#none",
+		"https://news.v.daum.net/v/20200216130927758#none",
 		// "https://namu.wiki/w/설리(1994)",
 		// "https://www.yna.co.kr/view/AKR20200217067251001?section=politics/national-assembly",
 		// "http://www.hani.co.kr/arti/politics/bluehouse/928518.html",
