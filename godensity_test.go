@@ -36,7 +36,7 @@ func TestDensity(t *testing.T) {
 		// Extract and process the body of the page
 		body := doc.Find("body")
 		Filtering(body)        // Apply filtering logic
-		DiveIntoDOM(body, url) // Analyze DOM for density
+		diveIntoDOM(body, url) // Analyze DOM for density
 
 		// Sort nodes based on densitySum
 		sort.Slice(array, func(i, j int) bool {
