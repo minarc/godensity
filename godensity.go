@@ -2,7 +2,7 @@ package godensity
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -65,7 +65,7 @@ func IsGIF(src *url.URL, currentURL *url.URL) bool {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Printf("Error reading response body: %v", err)
 		return false
