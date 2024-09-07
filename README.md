@@ -11,7 +11,7 @@ This repository contains an implementation of 📄 DOM-based Content Extraction 
 ``` shell
 gh repo clone minarc/godensity
 cd godensity
-go test
+go test -v .
 ```
 <img width="1124" alt="image" src="https://user-images.githubusercontent.com/11865340/121860599-f73e1800-cd33-11eb-9927-612df92590ef.png">
 
