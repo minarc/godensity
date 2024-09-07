@@ -17,7 +17,6 @@ type Node struct {
 	text        string
 	next        *Node
 }
-
 type Heap struct {
 	nodes []Node
 }

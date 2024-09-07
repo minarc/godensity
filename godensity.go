@@ -12,22 +12,20 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func CTD() float32 {
+// Placeholder functions for Density-related computations
+func ComputeTextDensity() float32 {
 	return 1
 }
 
-func TD() float32 {
+func ComputeDensity() float32 {
 	return 1
 }
 
-func Density() {
-
+func CalculateDensitySum() float32 {
+	return 1
 }
 
-func DensitySum() {
-
-}
-
+// IsGIF checks if the provided URL points to a GIF image by examining its content
 func IsGIF(src *url.URL, currentURL *url.URL) bool {
 	target := src.String()
 
@@ -36,147 +34,119 @@ func IsGIF(src *url.URL, currentURL *url.URL) bool {
 	}
 
 	res, err := http.Get(target)
-
 	if err != nil {
-		log.Println(src, currentURL, target)
+		log.Printf("Error fetching URL: %v, Source: %v, Target: %v", err, src, target)
 		return false
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Error reading response body: %v", err)
 	}
 
-	// GIF magic number
-	// 47 49 46 38 37 61
-	// 47 49 46 38 39 61
-	if bytes.Compare(body[:4], []byte{71, 73, 70, 56}) == 1 {
-		log.Println("GIF!", target)
+	// Check GIF magic number in first 4 bytes (GIF87a or GIF89a)
+	if bytes.HasPrefix(body, []byte{71, 73, 70, 56}) {
+		log.Printf("GIF detected! URL: %s", target)
 		return true
 	}
 	return false
 }
 
-func DiveIntoDOM(me *goquery.Selection, domain string) *Node {
-	if me.Children().Length() == 0 {
+// DiveIntoDOM traverses the DOM structure recursively and calculates density metrics
+func DiveIntoDOM(selection *goquery.Selection, domain string) *Node {
+	// Base case: no children, calculate density for text or images
+	if selection.Children().Length() == 0 {
 		re := regexp.MustCompile(`\s+`)
-		characters := re.ReplaceAllString(strings.TrimSpace(me.Text()), " ")
-		// density := float32(len(characters))
-		var density float32 = 0
+		textContent := re.ReplaceAllString(strings.TrimSpace(selection.Text()), " ")
+		var density float32
 
-		if goquery.NodeName(me) == "img" {
-			if src, exist := me.Attr("src"); !exist {
-				log.Println("error")
+		// Check if it's an image tag
+		if goquery.NodeName(selection) == "img" {
+			if src, exists := selection.Attr("src"); exists {
+				parsedSrc, _ := url.Parse(src)
+				parsedDomain, _ := url.Parse(domain)
+				if IsGIF(parsedSrc, parsedDomain) {
+					density = 1
+				}
 			} else {
-				s, _ := url.Parse(src)
-				d, _ := url.Parse(domain)
-				IsGIF(s, d)
-				density = 1
+				log.Println("Image tag found with no src attribute")
 			}
 		}
 
 		return &Node{
-			goqueryNode: me,
+			goqueryNode: selection,
 			density:     density,
 			densitySum:  0,
-			images: me.Filter("img").Map(func(_ int, s *goquery.Selection) string {
+			images: selection.Filter("img").Map(func(_ int, s *goquery.Selection) string {
 				src, _ := s.Attr("src")
 				return src
 			}),
-			videos: me.Filter("video > source").Map(func(_ int, s *goquery.Selection) string {
+			videos: selection.Filter("video > source").Map(func(_ int, s *goquery.Selection) string {
 				src, _ := s.Attr("src")
 				return src
 			}),
 			T:    0,
-			text: characters,
+			text: textContent,
 			next: nil,
 		}
 	}
 
-	var densitySum float32
-	var maximum float32 = -1
-	var next *Node
-	var T float32
+	// Recursive case: process children and calculate density metrics
+	var (
+		densitySum float32
+		maxDensity float32 = -1
+		nextNode   *Node
+		T          float32
+	)
 
-	me.Children().Each(func(_ int, c *goquery.Selection) {
-		child := DiveIntoDOM(c, domain)
+	selection.Children().Each(func(_ int, child *goquery.Selection) {
+		childNode := DiveIntoDOM(child, domain)
+		densitySum += childNode.density
+		T += childNode.T
 
-		densitySum += child.density
-		T += child.T
-
-		if child.density > maximum {
-			next = child
-			maximum = child.density
+		// Track child with maximum density
+		if childNode.density > maxDensity {
+			nextNode = childNode
+			maxDensity = childNode.density
 		}
 	})
 
-	T += float32(me.Children().Length())
+	T += float32(selection.Children().Length())
 
-	// fmt.Println(len(me.Children().Text()))
+	// Calculate various metrics for text and links
 	re := regexp.MustCompile(`\s+`)
+	textLength := float32(len(re.ReplaceAllString(strings.TrimSpace(selection.Text()), " ")))
+	linkTextLength := float32(len(re.ReplaceAllString(strings.TrimSpace(selection.Find("a").Text()), " ")))
+	linkCount := float32(selection.Find("a").Length())
 
-	var C float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Text()), " ")))
-	var LT float32 = float32(me.Find("a").Length())
-
-	var LC float32 = float32(len(re.ReplaceAllString(strings.TrimSpace(me.Find("a").Text()), " ")))
-	// var nLC float32 = C - LC
-	// var nLC float32 = C - LC
-	if T-LT <= 0 {
+	if T-linkCount <= 0 {
 		T = 1
-		LT = 0
+		linkCount = 0
 	}
 
-	// var I float32 = float32(me.Find("img").Length())
-	// var V float32 = float32(me.Find("video").Length())
-	var G float32 = 0
-	// var GIFs []string
+	// Calculate density: (text - linkText) / (totalText - totalLinkText)
+	density := (textLength - linkTextLength) / (T - linkCount)
 
-	// me.Find("img").Each(func(i int, s *goquery.Selection) {
-	// 	src, _ := s.Attr("src")
-	// 	if strings.Contains(src, ".gif") && !strings.Contains(src, "icon") {
-	// 		G++
-	// 		GIFs = append(GIFs, src)
-	// 	}
-	// })
-
-	// if I == 0 {
-	// 	I = 1
-	// }
-	if G == 0 {
-		G = 1
-	}
-	// if V == 0 {
-	// 	V = 1
-	// }
-
-	// fmt.Println(class, (C-LC)/(T-LT), I, C, LC, T, LT, re.ReplaceAllString(strings.TrimSpace(me.Text()), " "))
-	// fmt.Println(class, (C-LC)/(T-LT), I, C, LC, T, LT)
-	// var density float32 = (C-LC)/(T-LT) + (GIFs * V)
-	// var density float32 = (G * V)
-	// densitySum *= G * V
-
-	var density float32 = (C - LC) / (T - LT)
-	// density := (C / T) * float32(math.Log10(float64((C/LC)*(T/LT)))/math.Log10(math.Log(float64(((C/nLC)*LC)+LC+math.E))))
-
-	itsme := &Node{
-		goqueryNode: me,
+	// Create Node object for the current element
+	currentNode := &Node{
+		goqueryNode: selection,
 		density:     density,
 		densitySum:  densitySum,
-		// images:      GIFs,
-		videos: me.Find("video > source").Map(func(_ int, s *goquery.Selection) string {
+		videos: selection.Find("video > source").Map(func(_ int, s *goquery.Selection) string {
 			src, _ := s.Attr("src")
 			return src
 		}),
 		T:    T,
-		text: re.ReplaceAllString(strings.TrimSpace(me.Text()), " "),
-		next: next,
+		text: re.ReplaceAllString(strings.TrimSpace(selection.Text()), " "),
+		next: nextNode,
 	}
 
-	array = append(array, *itsme)
+	// Append to the array for later use
+	array = append(array, *currentNode)
 
-	return itsme
+	return currentNode
 }
 
+// Global array to store Node structures
 var array []Node

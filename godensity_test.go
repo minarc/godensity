@@ -11,93 +11,81 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// TestDensity tests the density analysis of various web pages
 func TestDensity(t *testing.T) {
 
 	urls := []string{
 		"https://news.v.daum.net/v/20200216130927758#none",
-		// "https://namu.wiki/w/설리(1994)",
-		// "https://www.yna.co.kr/view/AKR20200217067251001?section=politics/national-assembly",
-		// "http://www.hani.co.kr/arti/politics/bluehouse/928518.html",
-		// "https://gall.dcinside.com/board/lists/?id=baseball_new8",
-		// "https://blog.bobthedeveloper.io/happy-new-year-from-bob-86b018fd134a",
-		// "http://www.hani.co.kr/arti/politics/bluehouse/928518.html",
-		// "https://m.blog.naver.com/PostView.nhn?blogId=forsun55&logNo=220923292175&proxyReferer=https%3A%2F%2Fwww.google.com%2F",
-		// "https://www.dogdrip.net/index.php?mid=computer&category=180739712&document_srl=246186396&page=1",
-		// "http://www.donga.com/news/article/all/20200221/99817201/2",
-		// "https://gall.dcinside.com/board/view/?id=hit&no=15657&page=1",
-		// "http://magazine.hankyung.com/business/apps/news?mode=sub_view&nkey=2011022200795000041",
+		// Additional URLs can be added as needed
 	}
 
 	for _, url := range urls {
+		// Fetch the webpage
+		res, err := http.Get(url)
+		if err != nil {
+			log.Fatalf("Failed to get URL %s: %v", url, err)
+		}
+		defer res.Body.Close()
 
-		if res, err := http.Get(url); err != nil {
-			log.Fatal(err)
-		} else {
-			if doc, err := goquery.NewDocumentFromResponse(res); err != nil {
-				log.Fatal(err)
-			} else {
-				body := doc.Find("body")
-				Filtering(body)
-				DiveIntoDOM(body, url)
-			}
+		// Parse the HTML document
+		doc, err := goquery.NewDocumentFromResponse(res)
+		if err != nil {
+			log.Fatalf("Failed to parse HTML from URL %s: %v", url, err)
 		}
 
+		// Extract and process the body of the page
+		body := doc.Find("body")
+		Filtering(body)        // Apply filtering logic
+		DiveIntoDOM(body, url) // Analyze DOM for density
+
+		// Sort nodes based on densitySum
 		sort.Slice(array, func(i, j int) bool {
 			return array[i].densitySum > array[j].densitySum
 		})
 
+		// Define candidates and threshold
 		var candidates []Node
-		var threashold float32
+		var threshold float32
 
 		log.Println("------------")
-		log.Println(url)
+		log.Printf("Analyzing URL: %s", url)
 
+		// Analyze elements and determine the threshold
 		for _, element := range array {
-
-			class, _ := element.goqueryNode.Attr("id")
-			log.Println(goquery.NodeName(element.goqueryNode), element.density, element.densitySum, class)
+			nodeID, _ := element.goqueryNode.Attr("id")
+			log.Printf("Node: %s | Density: %.2f | DensitySum: %.2f | ID: %s", goquery.NodeName(element.goqueryNode), element.density, element.densitySum, nodeID)
 
 			if strings.Contains(goquery.NodeName(element.goqueryNode), "body") {
-				threashold = element.density
+				threshold = element.density
 				break
 			}
-
 			candidates = append(candidates, element)
 		}
 
+		// If no candidates, select a default fallback
 		if len(candidates) == 0 {
 			candidates = append(candidates, array[1])
 		}
 
+		// Display the top 10 elements based on density
 		array = array[:10]
 		for _, c := range array {
 			id, _ := c.goqueryNode.Attr("id")
 			class, _ := c.goqueryNode.Attr("class")
-			fmt.Println(goquery.NodeName(c.goqueryNode), c.density, c.densitySum, id, class)
+			fmt.Printf("Node: %s | Density: %.2f | DensitySum: %.2f | ID: %s | Class: %s\n", goquery.NodeName(c.goqueryNode), c.density, c.densitySum, id, class)
 		}
 
-		// visited := make(map[*Node]bool)
-
-		// log.Println(threashold)
-		// log.Println(candidates)
-
+		// Process candidates with density above the threshold
 		for _, element := range candidates {
-			var cursor *Node = &element
-			// var slower *Node = cursor
-			if element.density < threashold {
+			cursor := &element
+			if element.density < threshold {
 				continue
 			}
-			log.Println(cursor)
+			log.Printf("Selected Node: %v", cursor)
 			break
-			// for cursor.next != nil && cursor.density >= threashold {
-			// 	slower = cursor
-			// 	cursor = cursor.next
-			// }
-
-			// fmt.Println(slower.text)
-			// fmt.Println("-------------")
 		}
+
+		// Clear array for next iteration
 		array = array[:0]
 	}
-
 }

@@ -2,24 +2,16 @@ package godensity
 
 import "github.com/PuerkitoBio/goquery"
 
+// Filtering removes unnecessary HTML elements from the page's body to simplify the DOM analysis.
 func Filtering(body *goquery.Selection) {
-	body.Find("script").Remove()
-	body.Find("style").Remove()
-	body.Find("br").Remove()
-	body.Find("input").Remove()
-	body.Find("button").Remove()
-	body.Find("textarea").Remove()
-	body.Find("label").Remove()
-	body.Find("form").Remove()
-	body.Find("iframe").Remove()
+	// Remove common interactive and irrelevant elements from the DOM
+	toRemove := []string{
+		"script", "style", "br", "input", "button", "textarea", "label", "form", "iframe",
+		"header", "nav", ".comment", "footer", ".footer", "#footer",
+	}
 
-	body.Find("header").Remove()
-	body.Find("nav").Remove()
-	body.Find("iframe").Remove()
-
-	body.Find(".comment").Remove()
-
-	body.Find("footer").Remove()
-	body.Find(".footer").Remove()
-	body.Find("#footer").Remove()
+	// Iterate over the list and remove each element
+	for _, selector := range toRemove {
+		body.Find(selector).Remove()
+	}
 }
